@@ -1,28 +1,51 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab";
+import Zoom from "@material-ui/core/Zoom";
 
 function CreateArea(props) {
-    const [content, setContent] = useState({
-        title: "",
-        content: ""
-    })
+  const [content, setContent] = useState({
+    title: "",
+    content: "",
+  });
+  const [isVisible, setIsVisible] = useState(false);
 
-    function handleChange(e){
-        const {name, value} = e.target;
-        setContent((prevValue)=>{
-            return {...prevValue, [name]:value}
-        })
-    }
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setContent((prevValue) => {
+      return { ...prevValue, [name]: value };
+    });
+  }
 
   return (
     <div>
-      <form>
-        <input onChange={handleChange} value={content.title} name="title" placeholder="Title" />
-        <textarea onChange={handleChange} value={content.content} name="content" placeholder="Take a note..." rows="3" />
-        <button onClick={(e)=>{
-            e.preventDefault();
-            props.newNote(content)
-            setContent({title: "", content:""})
-        }}>Add</button>
+      <form className="create-note">
+        {isVisible &&
+        <input
+          onChange={handleChange}
+          value={content.title}
+          name="title"
+          placeholder="Title"
+        />}
+        <textarea
+          onClick={()=>{setIsVisible(true)}}
+          onChange={handleChange}
+          value={content.content}
+          name="content"
+          placeholder="Take a note..."
+          rows={isVisible ? "3": "1"}
+        />
+        <Zoom in={isVisible}>
+          <Fab
+            onClick={(e) => {
+              e.preventDefault();
+              props.newNote(content);
+              setContent({ title: "", content: "" });
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Zoom>
       </form>
     </div>
   );
