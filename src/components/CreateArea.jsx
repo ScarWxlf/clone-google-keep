@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Zoom from "@material-ui/core/Zoom";
+import axios from "axios";
 
 function CreateArea(props) {
   const [content, setContent] = useState({
@@ -15,6 +16,11 @@ function CreateArea(props) {
     setContent((prevValue) => {
       return { ...prevValue, [name]: value };
     });
+  }
+
+  async function submitRequest() {
+    const result = await axios.post("http://localhost:3004/add", content);
+    props.newNote(result.data);
   }
 
   return (
@@ -37,10 +43,10 @@ function CreateArea(props) {
         />
         <Zoom in={isVisible}>
           <Fab
-            onClick={(e) => {
-              e.preventDefault();
-              props.newNote(content);
-              setContent({ title: "", content: "" });
+            onClick={()=>{
+             // props.newNote(content);
+              submitRequest();
+              setContent({title: "", content: ""});
             }}
           >
             <AddIcon />
